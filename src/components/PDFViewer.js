@@ -1,29 +1,38 @@
+// PDFViewr.js
 import React, { useEffect, useRef } from 'react';
 import * as pdfjsLib from 'pdfjs-dist/build/pdf';
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
-const PDFViewer = ({ pdfBlob, onStamp }) => {
-    const containerRef = useRef(null);
+const PDFViewer = ({ pdfBlob, onStamp, signDocument }) => {
+  const containerRef = useRef(null);
 
-    const handleCanvasClick = (e, canvas, pageNumber) => {
-        const context = canvas.getContext('2d');
-        const x = e.offsetX;
-        const y = e.offsetY;
+  const handleCanvasClick = async (e, canvas, pageNumber) => {
+    const context = canvas.getContext('2d');
+    const x = e.offsetX;
+    const y = e.offsetY;
 
-        // Draw a simple text stamp
-        context.font = '20px Arial';
-        context.fillStyle = 'red';
-        context.fillText(`Stamped on page ${pageNumber}`, x, y);
+    try {
+        // Generate the signature data
+        const signatureData = await signDocument(pdfBlob);
 
-        onStamp({
-          text: `Stamped on page ${pageNumber}`,
-          x: x,
-          y: y,
-          page: pageNumber
-      });
-    };
+        if (signatureData) {
+            // Create the stamp text
+            const stampText = `Signed by: ${signatureData.signer}\nSignature: ${signatureData.signature}\nTimestamp: ${signatureData.timestamp}`;
+            context.fillText(stampText, x, y);
+
+            // Pass the stamp data to the App component
+            onStamp({ text: stampText, x, y, page: pageNumber });
+        } else {
+            console.error('Signature data is undefined');
+        }
+    } catch (error) {
+        console.error('Error in handleCanvasClick:', error);
+    }
+};
+
+
 
     useEffect(() => {
         const renderPageOnCanvas = async (pdf, pageNumber, container) => {
@@ -55,7 +64,7 @@ const PDFViewer = ({ pdfBlob, onStamp }) => {
                 }
             });
         }
-    }, [pdfBlob]);
+    }, [pdfBlob, signDocument]);
 
     return (
         <div ref={containerRef} className="pdf-container">
