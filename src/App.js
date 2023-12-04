@@ -21,39 +21,40 @@ const App = () => {
     };
 
     const signDocument = async (pdfBlob) => {
-      console.log('signDocument called with pdfBlob:', pdfBlob);
-
-      if (typeof window.ethereum !== 'undefined') {
-          const web3 = new Web3(window.ethereum);
-          try {
-              await window.ethereum.enable();
-              const accounts = await web3.eth.getAccounts();
-              const account = accounts[0];
-              console.log('User account:', account);
-
-              // Convert blob to binary data for hashing
-              const pdfData = await new Response(pdfBlob).arrayBuffer();
-              const pdfBytesHex = '0x' + Array.from(new Uint8Array(pdfData), byte => byte.toString(16).padStart(2, '0')).join('');
-              console.log('PDF Data Hex:', pdfBytesHex);
-
-              const pdfHash = web3.utils.sha3(pdfBytesHex);
-              console.log('PDF Hash:', pdfHash);
-
-              const signature = await web3.eth.personal.sign(pdfHash, account);
-              console.log('Signature:', signature);
-
-              return {
-                  signer: account,
-                  signature,
-                  timestamp: Math.floor(Date.now() / 1000)
-              };
-          } catch (error) {
-              console.error('Error signing document:', error);
-          }
-      } else {
+      if (typeof window.ethereum === 'undefined') {
           alert('MetaMask is not installed.');
+          return;
+      }
+
+      const web3 = new Web3(window.ethereum);
+
+      try {
+          await window.ethereum.enable();
+          const accounts = await web3.eth.getAccounts();
+          const account = accounts[0];
+          console.log('User account:', account);
+
+          const pdfData = await new Response(pdfBlob).arrayBuffer();
+          const pdfBytesHex = '0x' + [...new Uint8Array(pdfData)]
+                  .map((byte) => byte.toString(16).padStart(2, '0'))
+                  .join('');
+          const pdfHash = web3.utils.sha3(pdfBytesHex);
+          console.log('PDF Hash:', pdfHash);
+
+          // Passing `null` or an empty string as the third argument
+          const signature = await web3.eth.personal.sign(pdfHash, account, '');
+
+          return {
+              signer: account,
+              signature,
+              timestamp: Math.floor(Date.now() / 1000)
+          };
+      } catch (error) {
+          console.error('Error signing document:', error);
       }
   };
+
+
 
 
     const handleStamp = useCallback((stampData) => {
