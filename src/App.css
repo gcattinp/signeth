@@ -14,7 +14,7 @@ body, #root {
 
 .container {
   width: 100%;
-  max-width: 600px;
+  max-width: 800px;
   padding: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
@@ -65,10 +65,20 @@ body, #root {
   max-height: 80vh; /* Adjust the height as needed */
   overflow-y: auto; /* Adds vertical scrolling */
   padding: 10px;
+  border: 1px solid #ccc;
 }
 
 .canvas {
   max-width: 100%;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
+}
+
+.stamp-overlay {
+  max-width: 30px;
+  font-size: 0.7rem;
+  word-wrap: break-word;
+  text-align: left;
+  border: 1px solid #ccc;
+  padding: 5px;
 }
