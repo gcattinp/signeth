@@ -1,41 +1,62 @@
-/* App.css */
 body, #root {
   margin: 0;
-  padding: 0;
+  padding: 20px;
   height: 100vh;
   width: 100vw;
-  overflow: hidden;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start; /* Aligns items to the start of the container */
   align-items: center;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  background: #fff;
+  font-family: 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  color: #000;
+}
+
+canvas {
+  width: 100%;
+  height: 73vh;
+  border: 2px solid #000;
+  text-align: center;
+}
+
+.title {
+  font-size: 5rem;
+  font-weight: bold;
+  font-style: italic;
+  margin-top: 25vh; /* Adjust the top margin to push the title up */
+  margin-bottom: 2vh; /* Small bottom margin for spacing */
+  text-align: center;
+  color: #000;
 }
 
 .container {
   width: 100%;
   max-width: 800px;
-  padding: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  background: white;
+  max-height: 85vh;
+  margin-top: 2vh;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 2px solid #000;
+  background: #fff;
   text-align: center;
 }
 
+
 .button {
-  background-color: #007bff;
-  color: white;
-  padding: 10px 20px;
-  margin: 10px 0;
-  border: none;
-  border-radius: 4px;
+  background-color: #000;
+  color: #fff;
+  padding: 12px 24px;
+  margin: 20px 0;
+  border: 2px solid #000;
+  border-radius: 0;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .button:hover {
-  background-color: #0056b3;
+  background-color: #fff;
+  color: #000;
+  border: 2px solid #000;
 }
 
 .file-input {
@@ -43,42 +64,36 @@ body, #root {
 }
 
 .drop-zone {
-  width: 100%;
-  height: 60px;
-  border: 2px dashed #aaa;
-  border-radius: 5px;
+  width: 60%;
+  height: 50px;
+  border: 3px dashed #000;
+  border-radius: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 20px;
+  margin: 10px auto;
   cursor: pointer;
-  font-size: 0.9rem;
-  color: #aaa;
+  font-size: 1rem;
+  color: #000;
+  transition: border-color 0.3s ease;
 }
 
 .drop-zone:hover {
-  border-color: #333;
-  color: #333;
+  border-color: #000;
+  background-color: #f0f0f0;
 }
 
 .pdf-container {
-  max-height: 80vh; /* Adjust the height as needed */
-  overflow-y: auto; /* Adds vertical scrolling */
-  padding: 10px;
-  border: 1px solid #ccc;
+  display: block;
+  max-height: 75vh;
+  overflow-y: auto; /* Keeps vertical scroll */
+  width: auto; /* Allows container to shrink to fit the content width */
+  margin: 0 auto; /* Centers the container */
+  padding: 20px;
+  box-sizing: border-box;
+
 }
 
-.canvas {
-  max-width: 100%;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-}
-
-.stamp-overlay {
-  max-width: 30px;
-  font-size: 0.7rem;
-  word-wrap: break-word;
-  text-align: left;
-  border: 1px solid #ccc;
-  padding: 5px;
+.wrapper-div {
+  margin: 0 auto; /* Centers the wrapper div */
 }
