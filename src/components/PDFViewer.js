@@ -44,7 +44,7 @@ const PDFViewer = ({ pdfBlob, signDocument, stamps, onStamp }) => {
     useEffect(() => {
       const renderPageOnCanvas = async (pdf, pageNum) => {
         const page = await pdf.getPage(pageNum);
-        const viewport = page.getViewport({ scale: 1.2 });
+        const viewport = page.getViewport({ scale: 1 });
         const canvas = document.createElement('canvas');
         canvas.height = viewport.height;
         canvas.width = viewport.width;

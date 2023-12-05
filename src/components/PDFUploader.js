@@ -23,7 +23,7 @@ const PDFUploader = ({ onFileSelect }) => {
     return (
       <div>
           <button className="button" onClick={() => document.getElementById('file-input').click()}>
-              Upload to Sign
+              Upload
           </button>
           <input
               type="file"
@@ -33,7 +33,7 @@ const PDFUploader = ({ onFileSelect }) => {
               className="file-input"
           />
           <div className="drop-zone" onDragOver={handleDragOver} onDrop={handleDrop}>
-              Drag & Drop PDF Here
+              Drag & Drop
           </div>
       </div>
   );

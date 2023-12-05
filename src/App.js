@@ -58,19 +58,17 @@ const App = () => {
   const downloadStampedPDF = async () => {
     const pdfDoc = await PDFDocument.load(originalPdfBytes);
     const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
-    const xOffset = 38;
 
     stamps.forEach(async (stamp) => {
       const page = pdfDoc.getPages()[stamp.page - 1];
       const lines = stamp.text.split('\n');
       let currentY = stamp.y;
 
-      const yOffset = -79;
 
       lines.forEach((line) => {
           page.drawText(line, {
-              x: stamp.x - xOffset,
-              y: page.getHeight() - currentY - yOffset,
+              x: stamp.x,
+              y: page.getHeight() - currentY,
               size: 10,
               font: helveticaFont,
           });
