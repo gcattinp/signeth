@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PDFUploader from './components/PDFUploader';
 import PDFViewer from './components/PDFViewer';
-import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+import { PDFDocument, StandardFonts } from 'pdf-lib';
 import Web3 from 'web3';
 import './App.css';
 
@@ -56,28 +56,27 @@ const App = () => {
         const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
 
         stamps.forEach(async (stamp) => {
-            const page = pdfDoc.getPages()[stamp.page - 1];
-            const lines = stamp.text.split('\n');
-            let currentY = stamp.y;
+          const page = pdfDoc.getPages()[stamp.page - 1];
+          const lines = stamp.text.split('\n');
+          let currentY = stamp.y;
 
-            lines.forEach((line) => {
+          lines.forEach((line) => {
+              page.drawText(line, {
+                  x: stamp.x,
+                  y: page.getHeight() - currentY,
+                  size: 10,
+                  font: helveticaFont,
+              });
 
-                page.drawText(line, {
-                    x: stamp.x,
-                    y: page.getHeight() - currentY,
-                    size: 10,
-                    font: helveticaFont,
-                });
-
-                currentY += 12;
-            });
+              currentY += 12;
+          });
         });
 
         const stampedPdfBytes = await pdfDoc.save();
         const url = URL.createObjectURL(new Blob([stampedPdfBytes], { type: "application/pdf" }));
         const a = document.createElement("a");
         a.href = url;
-        a.download = "stamped-pdf.pdf";
+        a.download = "signed_pdf.pdf";
         a.click();
         URL.revokeObjectURL(url);
     };
@@ -90,7 +89,7 @@ const App = () => {
                 <>
                     <PDFViewer pdfBlob={pdfBlob} onStamp={setStamps} signDocument={signDocument} stamps={stamps} />
                     <button className="button" onClick={downloadStampedPDF}>
-                        Download Stamped PDF
+                        Download
                     </button>
                 </>
             )}

@@ -8,7 +8,6 @@ const PDFViewer = ({ pdfBlob, signDocument, stamps, onStamp }) => {
     const containerRef = useRef(null);
 
     const chunkSignature = (signature, label, chunkSize) => {
-      const labelLength = label.length;
       const chunks = [];
       for (let i = 0; i < signature.length; i += chunkSize) {
           const chunk = signature.substring(i, Math.min(i + chunkSize, signature.length));
@@ -30,8 +29,8 @@ const PDFViewer = ({ pdfBlob, signDocument, stamps, onStamp }) => {
         try {
           const signatureData = await signDocument(pdfBlob);
           if (signatureData) {
-              const label = "signature: "; // Your label
-              const wrappedSignature = chunkSignature(signatureData.signature, label, 71); // Use the desired chunk size
+              const label = "signature: ";
+              const wrappedSignature = chunkSignature(signatureData.signature, label, 66);
               const stampText = `address: ${signatureData.signer}\nhash: ${signatureData.pdfHash}\n${wrappedSignature}\nTimestamp: ${signatureData.timestamp}`;
               onStamp([...stamps, { text: stampText, x, y, page: pageNumber }]);
           } else {
@@ -43,31 +42,39 @@ const PDFViewer = ({ pdfBlob, signDocument, stamps, onStamp }) => {
     };
 
     useEffect(() => {
-        const renderPageOnCanvas = async (pdf, pageNum) => {
-            const page = await pdf.getPage(pageNum);
-            const viewport = page.getViewport({ scale: 1.5 });
-            const canvas = document.createElement('canvas');
-            canvas.height = viewport.height;
-            canvas.width = viewport.width;
-            const context = canvas.getContext('2d');
-            const renderContext = { canvasContext: context, viewport: viewport };
+      const renderPageOnCanvas = async (pdf, pageNum) => {
+        const page = await pdf.getPage(pageNum);
+        const viewport = page.getViewport({ scale: 1.2 });
+        const canvas = document.createElement('canvas');
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+        const context = canvas.getContext('2d');
+        const renderContext = { canvasContext: context, viewport: viewport };
 
-            // Append the new canvas for each page
-            containerRef.current.appendChild(canvas);
-            await page.render(renderContext).promise;
+        const wrapperDiv = document.createElement('div');
+        wrapperDiv.style.marginBottom = "2px";
+        wrapperDiv.style.padding = "10px";
+        wrapperDiv.style.boxShadow = "0 2px 4px rgba(0, 0, 0, 0.1)";
 
-            // Draw the stamps for the current page
-            stamps.filter(stamp => stamp.page === pageNum).forEach(stamp => {
-                const lines = stamp.text.split('\n');
-                let currentY = stamp.y;
-                lines.forEach(line => {
-                    context.fillText(line, stamp.x, currentY);
-                    currentY += 10; // Adjust for line height
-                });
+        wrapperDiv.appendChild(canvas);
+
+        containerRef.current.appendChild(wrapperDiv);
+
+        await page.render(renderContext).promise;
+
+        stamps.filter(stamp => stamp.page === pageNum).forEach(stamp => {
+            const lines = stamp.text.split('\n');
+            let currentY = stamp.y;
+            lines.forEach(line => {
+                context.font = "10px Helvetica";
+                context.fillText(line, stamp.x, currentY);
+                currentY += 12;
             });
+        });
 
-            canvas.addEventListener('click', (e) => handleCanvasClick(e, canvas, pageNum));
-        };
+        canvas.addEventListener('click', (e) => handleCanvasClick(e, canvas, pageNum));
+    };
+
 
         if (pdfBlob) {
             const loadingTask = pdfjsLib.getDocument(URL.createObjectURL(pdfBlob));
