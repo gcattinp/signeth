@@ -156,7 +156,7 @@ const App = () => {
         <div className="container">
           <div className="verification-section">
             <div className="input-wrapper">
-              <label htmlFor="pdf-hash">Hash:</label>
+              <label htmlFor="pdf-hash">Hash</label>
               <input
                 id="pdf-hash"
                 className="input-field"
@@ -180,7 +180,7 @@ const App = () => {
             </div>
 
             <div className="input-wrapper">
-              <label htmlFor="signature">Signature:</label>
+              <label htmlFor="signature">Signature</label>
               <input
                 id="signature"
                 className="input-field"
@@ -192,7 +192,7 @@ const App = () => {
             </div>
 
             <div className="input-wrapper">
-              <label htmlFor="address">Address:</label>
+              <label htmlFor="address">Address</label>
               <input
                 id="address"
                 className="input-field"

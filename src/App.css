@@ -19,6 +19,10 @@ canvas {
   text-align: center;
 }
 
+label {
+  font-weight: bold;
+}
+
 .title {
   font-size: 5rem;
   font-weight: bold;
@@ -37,7 +41,7 @@ canvas {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border: 2px solid #000;
   background: #fff;
-  position: relative; 
+  position: relative;
   text-align: center;
 }
 
@@ -126,7 +130,7 @@ canvas {
   flex-grow: 1;
   margin-left: 10px;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1.5px solid #000;
 }
 
 .upload-icon {
