@@ -212,6 +212,10 @@ const App = () => {
       {mode && (
         <button className="back-button" onClick={goBack}>- Back -</button>
       )}
+
+      <div className="footer">
+        By&nbsp;<a href="https://twitter.com/kali__gg" target="_blank" rel="noopener noreferrer" className="twitter-link">KaliCo</a>
+      </div>
     </>
   );
 };
