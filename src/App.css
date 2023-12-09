@@ -190,3 +190,14 @@ label {
 .twitter-link:hover {
   text-decoration: none;
 }
+
+/* Scrollbar */
+
+.pdf-container::-webkit-scrollbar {
+  width: 8px;
+  background-color: #fff;
+}
+
+.pdf-container::-webkit-scrollbar-thumb {
+  background-color: #000;
+}
