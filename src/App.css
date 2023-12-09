@@ -6,7 +6,7 @@ body, #root {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* Aligns items to the start of the container */
+  justify-content: flex-start;
   align-items: center;
   background: #fff;
   font-family: 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
@@ -15,8 +15,7 @@ body, #root {
 
 canvas {
   width: 100%;
-  height: 100%;
-  /* border: 2px solid #000; */
+  height: auto;
   text-align: center;
 }
 
@@ -24,8 +23,8 @@ canvas {
   font-size: 5rem;
   font-weight: bold;
   font-style: italic;
-  margin-top: 25vh; /* Adjust the top margin to push the title up */
-  margin-bottom: 2vh; /* Small bottom margin for spacing */
+  margin-top: 25vh;
+  margin-bottom: 2vh;
   text-align: center;
   color: #000;
 }
@@ -33,22 +32,21 @@ canvas {
 .container {
   width: 100%;
   max-width: 800px;
-  max-height: 100%;
   margin-top: 2vh;
   padding: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border: 2px solid #000;
   background: #fff;
+  position: relative; /* Needed for absolute positioning of the back button */
   text-align: center;
 }
-
 
 .button {
   background-color: #000;
   color: #fff;
   padding: 12px 24px;
   margin: 20px 0;
-  border: 2px solid #000;
+  border: none;
   border-radius: 0;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
@@ -57,11 +55,6 @@ canvas {
 .button:hover {
   background-color: #fff;
   color: #000;
-  border: 2px solid #000;
-}
-
-.file-input {
-  display: none;
 }
 
 .drop-zone {
@@ -87,14 +80,90 @@ canvas {
 .pdf-container {
   display: block;
   max-height: 75vh;
-  overflow-y: auto; /* Keeps vertical scroll */
-  width: auto; /* Allows container to shrink to fit the content width */
-  margin: 0 auto; /* Centers the container */
+  overflow-y: auto;
+  width: auto;
+  margin: 0 auto;
   border: 2px solid #000;
   box-sizing: border-box;
-
 }
 
 .wrapper-div {
-  margin: 0 auto; /* Centers the wrapper div */
+  margin: 0 auto;
+}
+
+.mode-selection .button {
+  margin-right: 20px;
+}
+
+.back-button {
+  background: none;
+  color: #000;
+  font-style: italic;
+  padding: 10px 20px;
+  margin: 20px 0;
+  border: none;
+  cursor: pointer;
+}
+
+/* New styles for the verification section */
+.verification-section {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.verification-section .input-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.verification-section .input-wrapper label {
+  margin-right: 10px;
+}
+
+.verification-section .input-field {
+  flex-grow: 1;
+  margin-left: 10px; /* Space between label and input field */
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+.upload-icon {
+  cursor: pointer;
+  background: url('./images/upload.png') no-repeat center;
+  background-size: contain;
+  border: none;
+  width: 30px;
+  height: 30px;
+  margin-left: 10px; /* Adjust space between input and icon */
+}
+
+.verification-result {
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Hidden file input */
+.file-input {
+  display: none;
+}
+
+/* Add media query if responsiveness is needed */
+@media (max-width: 768px) {
+  .verification-section .input-wrapper {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .verification-section .input-field {
+    margin-left: 0;
+    margin-top: 5px;
+  }
+
+  .upload-icon {
+    margin-top: 5px;
+    margin-left: 0;
+  }
 }

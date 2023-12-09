@@ -11,18 +11,33 @@ const App = () => {
   const [pdfBlob, setPdfBlob] = useState(null);
   const [stamps, setStamps] = useState([]);
   const [originalPdfBytes, setOriginalPdfBytes] = useState(null);
+  const [pdfHash, setPdfHash] = useState('');
+  const [signature, setSignature] = useState('');
+  const [signerAddress, setSignerAddress] = useState('');
+  const [verificationResult, setVerificationResult] = useState(null);
+  const [mode, setMode] = useState('');
 
   const handleFileSelect = async (file) => {
-      console.log("File Selected");
-      const fileReader = new FileReader();
-      fileReader.onload = async (event) => {
-          console.log("File Reader Loaded");
-          const pdfBytes = new Uint8Array(event.target.result);
-          setOriginalPdfBytes(pdfBytes);
-          setPdfBlob(new Blob([pdfBytes], { type: "application/pdf" }));
-      };
-      fileReader.readAsArrayBuffer(file);
-  };
+    console.log("File Selected");
+    const fileReader = new FileReader();
+    fileReader.onload = async (event) => {
+        console.log("File Reader Loaded");
+        const pdfBytes = new Uint8Array(event.target.result);
+
+        if (mode === 'verify') {
+            const web3 = new Web3();
+            const pdfBytesHex = '0x' + [...pdfBytes]
+                .map((byte) => byte.toString(16).padStart(2, '0'))
+                .join('');
+            const pdfHash = web3.utils.sha3(pdfBytesHex);
+            setPdfHash(pdfHash);
+        } else {
+            setOriginalPdfBytes(pdfBytes);
+            setPdfBlob(new Blob([pdfBytes], { type: "application/pdf" }));
+        }
+    };
+    fileReader.readAsArrayBuffer(file);
+};
 
   const signDocument = async (pdfBlob) => {
       if (typeof window.ethereum === 'undefined') {
@@ -86,24 +101,108 @@ const App = () => {
     URL.revokeObjectURL(url);
   };
 
-  return (
-    <>
-        {!pdfBlob && <h1 className="title">SignETH</h1>}
-        <div className="container">
-            {!pdfBlob ? (
-                <PDFUploader onFileSelect={handleFileSelect} />
-            ) : (
-                <>
-                    <PDFViewer pdfBlob={pdfBlob} onStamp={setStamps} signDocument={signDocument} stamps={stamps} />
-                    <button className="button" onClick={downloadStampedPDF}>
-                        Download
-                    </button>
-                </>
-            )}
-        </div>
-    </>
-);
+  const verifySignature = async () => {
+    try {
+        const web3 = new Web3(window.ethereum);
+        const recoveredAddress = await web3.eth.personal.ecRecover(pdfHash, signature);
+        const isValid = recoveredAddress.toLowerCase() === signerAddress.toLowerCase();
+        setVerificationResult(isValid ? "Valid Signature" : "Invalid Signature");
+    } catch (error) {
+        console.error('Error verifying signature:', error);
+        setVerificationResult("Verification failed");
+    }
 };
 
+  return (
+    <>
+    {(!pdfBlob || !mode) && <h1 className="title">SignETH</h1>}
+      {!mode && (
+        <div className="container">
+          <div className="mode-selection">
+            <button className="button" onClick={() => setMode('sign')}>Sign</button>
+            <button className="button" onClick={() => setMode('verify')}>Verify</button>
+          </div>
+        </div>
+      )}
+
+
+      {mode === 'sign' && (
+        <div className="container">
+          {!pdfBlob ? (
+            <PDFUploader onFileSelect={handleFileSelect} />
+          ) : (
+            <>
+              <PDFViewer pdfBlob={pdfBlob} onStamp={setStamps} signDocument={signDocument} stamps={stamps} />
+              <button className="button" onClick={downloadStampedPDF}>
+                Download
+              </button>
+            </>
+          )}
+        </div>
+      )}
+
+      {mode === 'verify' && (
+        <div className="container">
+          <div className="verification-section">
+            <div className="input-wrapper">
+              <label htmlFor="pdf-hash">Hash:</label>
+              <input
+                id="pdf-hash"
+                className="input-field"
+                type="text"
+                placeholder="Enter PDF Hash"
+                value={pdfHash}
+                onChange={(e) => setPdfHash(e.target.value.replace(/\s/g, ''))}
+              />
+              <button
+                className="upload-icon"
+                onClick={() => document.getElementById('pdf-upload').click()}
+                title="Upload PDF to extract hash"
+              />
+              <input
+                id="pdf-upload"
+                type="file"
+                accept="application/pdf"
+                onChange={(e) => handleFileSelect(e.target.files[0])}
+                className="file-input"
+              />
+            </div>
+
+            <div className="input-wrapper">
+              <label htmlFor="signature">Signature:</label>
+              <input
+                id="signature"
+                className="input-field"
+                type="text"
+                placeholder="Enter Signature"
+                value={signature}
+                onChange={(e) => setSignature(e.target.value.replace(/\s/g, ''))}
+              />
+            </div>
+
+            <div className="input-wrapper">
+              <label htmlFor="address">Address:</label>
+              <input
+                id="address"
+                className="input-field"
+                type="text"
+                placeholder="Enter Signer Address"
+                value={signerAddress}
+                onChange={(e) => setSignerAddress(e.target.value.replace(/\s/g, ''))}
+              />
+            </div>
+
+            <button className="button" onClick={verifySignature}>Verify</button>
+            {verificationResult && <p className="verification-result">{verificationResult}</p>}
+          </div>
+        </div>
+      )}
+
+      {mode && (
+        <button className="back-button" onClick={() => setMode('')}>- Back -</button>
+      )}
+    </>
+  );
+};
 
 export default App;
