@@ -37,7 +37,7 @@ const App = () => {
         }
     };
     fileReader.readAsArrayBuffer(file);
-};
+  };
 
   const signDocument = async (pdfBlob) => {
       if (typeof window.ethereum === 'undefined') {
@@ -111,11 +111,22 @@ const App = () => {
         console.error('Error verifying signature:', error);
         setVerificationResult("Verification failed");
     }
-};
+  };
+
+  const goBack = () => {
+    if (mode === 'sign' && pdfBlob) {
+      setPdfBlob(null);
+      setOriginalPdfBytes(null);
+      setStamps([]);
+    } else {
+      setMode('');
+    }
+  };
 
   return (
     <>
-    {(!pdfBlob || !mode) && <h1 className="title">SignETH</h1>}
+      {(mode !== 'sign' || !pdfBlob) && <h1 className="title">SignETH</h1>}
+
       {!mode && (
         <div className="container">
           <div className="mode-selection">
@@ -126,18 +137,18 @@ const App = () => {
       )}
 
 
-      {mode === 'sign' && (
+      {mode === 'sign' && !pdfBlob && (
         <div className="container">
-          {!pdfBlob ? (
-            <PDFUploader onFileSelect={handleFileSelect} />
-          ) : (
-            <>
-              <PDFViewer pdfBlob={pdfBlob} onStamp={setStamps} signDocument={signDocument} stamps={stamps} />
-              <button className="button" onClick={downloadStampedPDF}>
-                Download
-              </button>
-            </>
-          )}
+          <PDFUploader onFileSelect={handleFileSelect} />
+        </div>
+      )}
+
+      {mode === 'sign' && pdfBlob && (
+        <div className="container">
+          <PDFViewer pdfBlob={pdfBlob} onStamp={setStamps} signDocument={signDocument} stamps={stamps} />
+          <button className="button" onClick={downloadStampedPDF}>
+            Download
+          </button>
         </div>
       )}
 
@@ -199,7 +210,7 @@ const App = () => {
       )}
 
       {mode && (
-        <button className="back-button" onClick={() => setMode('')}>- Back -</button>
+        <button className="back-button" onClick={goBack}>- Back -</button>
       )}
     </>
   );

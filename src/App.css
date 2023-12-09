@@ -37,7 +37,7 @@ canvas {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border: 2px solid #000;
   background: #fff;
-  position: relative; /* Needed for absolute positioning of the back button */
+  position: relative; 
   text-align: center;
 }
 
@@ -105,7 +105,6 @@ canvas {
   cursor: pointer;
 }
 
-/* New styles for the verification section */
 .verification-section {
   display: flex;
   flex-direction: column;
@@ -125,7 +124,7 @@ canvas {
 
 .verification-section .input-field {
   flex-grow: 1;
-  margin-left: 10px; /* Space between label and input field */
+  margin-left: 10px;
   padding: 10px;
   border: 1px solid #ccc;
 }
@@ -137,7 +136,7 @@ canvas {
   border: none;
   width: 30px;
   height: 30px;
-  margin-left: 10px; /* Adjust space between input and icon */
+  margin-left: 10px;
 }
 
 .verification-result {
@@ -145,12 +144,10 @@ canvas {
   font-weight: bold;
 }
 
-/* Hidden file input */
 .file-input {
   display: none;
 }
 
-/* Add media query if responsiveness is needed */
 @media (max-width: 768px) {
   .verification-section .input-wrapper {
     flex-direction: column;
