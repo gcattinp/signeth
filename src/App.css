@@ -83,7 +83,7 @@ label {
 
 .pdf-container {
   display: block;
-  max-height: 75vh;
+  max-height: 70vh; /* Adjust the max-height to give space for the footer */
   overflow-y: auto;
   width: auto;
   margin: 0 auto;
